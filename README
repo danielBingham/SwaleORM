@@ -1,0 +1,85 @@
+
+====================
+SwaleORM v1.0 Readme
+====================
+
+===UNFINISHED===
+
+Note this read me is currently incomplete and the version of SwaleORM currently
+available on github is not v1.0, rather v0.8.  So it is also incomplete. 
+
+Introduction
+============
+
+SwaleORM is an abstraction layer that stands between your PHP code and your
+database.  It is built on top of Zend's built in table gateway Zend_Db_Table.
+It is designed to make it faster to write clean models and easier to organize
+your model handling code so that you can get to building the important stuff.  
+
+SwaleORM provides a set of default abstract objects that you can extend for each of
+your models to gain the pre-built functionality.  Each of the objects has a
+different function and single responsibility in the model's organization.
+There is a model which wraps your data, a mapper which maps it to the database,
+a builder which attempts to load associations, a query which queries the
+database for sets of models and a persistor which manipulates the model's
+corresponding database rows.  Each one allows for easy overriding of any
+particular function, so you can either use the fully automatic logic and just
+build your model or override any or all parts with custom logic.  
+
+
+SwaleORM_Model_Abstract
+-----------------------
+
+These are your primary model objects.  They provide lazy loading logic that can
+be enabled or disabled on object instantiation.  It is enabled by default.
+They also provide auto-magic getters and setters for each field, association or
+virtual field so that you don't have to write getters and setters.  
+
+
+SwaleORM_Mapper_Base
+------------------------
+
+The mappers map the data returned by Zend's table gateways to your models.
+They will attempt to do it automatically by assuming a 1 to 1 mapping of
+database tables and table fields to models and model fields, based on an
+optional naming conversion scheme you can specify through method overriding.
+If other mapping logic is needed, the mapping methods can be overridden.
+
+
+SwaleORM_Builder_Base
+-------------------------
+
+These provide the logic necessary to load model associations.  Models with lazy
+loading enabled will attempt to call them to perform the loading.  They can
+also be instantiated and used to load associations at will.  They will attempt
+to load associations automatically, using a structure specified in the
+constructor.  However, the logic for any particular association can be
+overridden by creating a 'buildAssociation' method in your child class.
+
+
+SwaleORM_Query_Base
+-----------------------
+
+The queries are intended to wrap your query logic. They query the database for
+sets of your models based on the parameters you give them.  They also provide a
+place for you to put your custom queries for virtual fields or any data related
+to a model that you might need.  They provide a set of default fetch methods:
+get, fetchOne, fetchAll.  Get takes an id and fetches a single model.  fetchOne
+takes an associative array and builds a select "Where a=b and c=d" from it.  It
+returns a single model or NULL if more than one model is matched.  fetchAll
+works as with fetchOne but returns all models that match the conditions.  In
+addition there are getBuildAll, fetchOneBuildAll and fetchAllBuildAll that
+build all associations on the fetched models.
+
+
+SwaleORM_Persistor_Base
+-----------------------
+
+The persistor is intended to wrap all logic related to storing the models in
+the database.  It provides update, insert and delete methods as well as the
+higher level save and clear functions.  Update, insert and delete only work on
+the individual model passed, but save and clear will work recursively on
+associations as well.  Save will also attempt to intelligently guess whether we
+should be inserting or updating the model.
+
+===UNFINISHED===
